@@ -3,8 +3,24 @@ WMS API DOCUMENTATION - TỔNG QUAN
 1.1 Success Response
 json{
   "success": true,
+  "message": "success",
   "data": { ... },
-  "metadata": { ... },
+  "timestamp": "2026-01-27T10:30:00Z"
+}
+1.2 Paged Response
+json{
+  "success": true,
+  "message": "success",
+  "data": { 
+    "content": {
+        
+    }
+    "page": 0,
+    "size": 10,
+    "totalElements": 6,
+    "totalPages": 1,
+    "last": true
+   },
   "timestamp": "2026-01-27T10:30:00Z"
 }
 1.2 Error Response
@@ -17,9 +33,12 @@ json{
     "detail": "Token không hợp lệ (hết hạn, không đúng định dạng, hoặc không truyền JWT ở header).",
     "message": "error.invalid_token",
     "params": "Authentication"
-    }
+    },
+    "timestamp": "2026-01-30T09:34:03.602842700Z"
 }
 ```
+
+---
 
 ---
 
