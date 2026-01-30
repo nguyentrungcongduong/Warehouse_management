@@ -1,0 +1,32 @@
+server:
+    port: ${POST}
+    
+spring:
+    application:
+            name: warehouse_management
+
+    datasource:
+        url: ${DB_URL}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+        driver-class-name: ${DRIVER_CLASS_NAME}
+    
+    jpa:
+        hibernate:
+            ddl-auto: update
+
+springdoc:
+    swagger-ui:
+        path: /swagger-ui.html
+        url: /v3/api-docs   #BẮT BUỘC: yêu cầu Swagger UI load đúng file JSON thật
+    api-docs:
+        enabled: true
+
+security:
+    authentication:
+        jwt:
+            # This token must be encoded using Base64 and be at least 256 bits long 
+            # (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+            base64-secret: ${BASE64-SECRET}
+            access-token-validity-in-seconds: ${ACCESS-TOKEN-VALIDITY-IN-SECONDS}
+            refresh-token-validity-in-seconds: ${REFRESH-TOKEN-VALIDITY-IN-SECONDS}
