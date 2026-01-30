@@ -1,0 +1,16 @@
+{
+  "properties": [
+    {
+      "name": "security.authentication.jwt.base64-secret",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "security.authentication.jwt.access-token-validity-in-seconds",
+      "type": "java.lang.Integer"
+    },
+    {
+      "name": "security.authentication.jwt.refresh-token-validity-in-seconds",
+      "type": "java.lang.Integer"
+    }
+  ]
+}

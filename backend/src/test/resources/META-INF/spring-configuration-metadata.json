@@ -1,0 +1,12 @@
+{
+  "properties": [
+    {
+      "name": "spring.jpa.properties.hibernate.format_sql",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "name": "spring.cloud.openfeign.enabled",
+      "type": "java.lang.Boolean"
+    }
+  ]
+}
