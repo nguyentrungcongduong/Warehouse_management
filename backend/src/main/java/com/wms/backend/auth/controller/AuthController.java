@@ -30,6 +30,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @Slf4j
 @RestController
@@ -52,6 +54,8 @@ public class AuthController {
 
     @PostMapping("/auth/login")
     @ApiMessage("Login successful")
+    @Operation(summary = "Login user", description = "Authenticate user and return access token")
+    @ApiResponse(responseCode = "200", description = "Login successful")
     public ResponseEntity<Object> login(@Valid @RequestBody LoginUserRequest loginDTO) {
         log.info("REST request to login Auth: {}", loginDTO);
 
@@ -89,6 +93,8 @@ public class AuthController {
 
     @GetMapping("/auth/refresh")
     @ApiMessage("Get new access token")
+    @Operation(summary = "Refresh token", description = "Get new access token using refresh token")
+    @ApiResponse(responseCode = "200", description = "Get new access token")
     public ResponseEntity<Object> handleRefreshToken(@CookieValue(name = "refresh_token") String refresh_token) {
         log.info("REST request to refresh Auth token, refresh_token: {}", refresh_token);
         // check refresh token
@@ -163,6 +169,8 @@ public class AuthController {
 
     @GetMapping("/auth/account")
     @ApiMessage("Get account information")
+    @Operation(summary = "Get account info", description = "Get current logged in user account information")
+    @ApiResponse(responseCode = "200", description = "Get account information")
     public ResponseEntity<LoginUserResponse.UserGetAccount> getAccount() {
         log.info("REST request to get Auth account");
         // get information of user from SecurityContext
@@ -188,6 +196,8 @@ public class AuthController {
 
     @PostMapping("/auth/logout")
     @ApiMessage("Logout successful")
+    @Operation(summary = "Logout user", description = "Logout user and invalidate refresh token")
+    @ApiResponse(responseCode = "200", description = "Logout successful")
     public ResponseEntity<Void> handleLogout() {
         log.info("REST request to logout Auth");
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : null;

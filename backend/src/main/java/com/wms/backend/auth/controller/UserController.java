@@ -27,6 +27,8 @@ import com.wms.backend.auth.service.UserService;
 import com.wms.backend.shared.dto.response.PagedResponse;
 import com.turkraft.springfilter.boot.Filter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import com.wms.backend.shared.util.anotation.ApiMessage;
 import com.wms.backend.shared.exception.BadRequestAlertException;
@@ -45,6 +47,8 @@ public class UserController {
     @PostMapping("/users")
     @ApiMessage("User created successfully")
     @PreAuthorize("hasAuthority('USER_CREATE')")
+    @Operation(summary = "Create user", description = "Create a new user")
+    @ApiResponse(responseCode = "201", description = "User created successfully")
     public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
         log.info("REST request to create User: {}", request);
         CreateUserResponse createdUser = this.userService.createUser(request);
@@ -54,6 +58,8 @@ public class UserController {
     @GetMapping("/users/{id}")
     @ApiMessage("Get user information successfully")
     @PreAuthorize("hasAuthority('USER_READ')")
+    @Operation(summary = "Get user by id", description = "Retrieve user details by its ID")
+    @ApiResponse(responseCode = "200", description = "Get user information successfully")
     public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Long id) {
         log.info("REST request to get User by id: {}", id);
         if (id <= 0) {
@@ -65,6 +71,8 @@ public class UserController {
     @GetMapping("/users")
     @ApiMessage("Get all users successfully")
     @PreAuthorize("hasAuthority('USER_READ')")
+    @Operation(summary = "Get all users", description = "Retrieve all users with pagination and filtering")
+    @ApiResponse(responseCode = "200", description = "Get all users successfully")
     public ResponseEntity<PagedResponse<UserResponse>> getAllUsers(Pageable pageable,
             @Filter Specification<User> spec) {
         log.info("REST request to get all Users, pageable: {}", pageable);
@@ -74,6 +82,8 @@ public class UserController {
     @PatchMapping("/users/{id}")
     @ApiMessage("User updated successfully")
     @PreAuthorize("hasAuthority('USER_UPDATE')")
+    @Operation(summary = "Update user", description = "Update an existing user")
+    @ApiResponse(responseCode = "200", description = "User updated successfully")
     public ResponseEntity<UpdateUserResponse> updatePartialUser(@PathVariable("id") Long id,
             @Valid @RequestBody UpdateUserRequest dto) {
         log.info("REST request to update User partially, id: {}, body: {}", id, dto);
@@ -90,12 +100,14 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     @ApiMessage("User deleted successfully")
     @PreAuthorize("hasAuthority('USER_DELETE')")
+    @Operation(summary = "Delete user", description = "Delete a user by its ID")
+    @ApiResponse(responseCode = "204", description = "User deleted successfully")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         log.info("REST request to delete User by id: {}", id);
         if (id <= 0) {
             throw new BadRequestAlertException("Invalid Id", ENTITY_NAME, "idnull");
         }
         userService.deleteUser(id);
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.noContent().build();
     }
 }

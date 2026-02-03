@@ -9,6 +9,7 @@ import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.BadRequestAlertException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ public class CategoryController {
     @PreAuthorize("hasAuthority('CATEGORY_CREATE')")
     @Operation(summary = "Create a new category")
     @ApiMessage("Create category successfully")
+    @ApiResponse(responseCode = "201", description = "Create category successfully")
     public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         if (categoryDTO.getId() != null) {
             throw new BadRequestAlertException("A new category cannot already have an ID", "Category", "idexists");
@@ -42,6 +44,7 @@ public class CategoryController {
     @PreAuthorize("hasAuthority('CATEGORY_READ')")
     @Operation(summary = "Get category by ID")
     @ApiMessage("Get category success")
+    @ApiResponse(responseCode = "200", description = "Get category success")
     public ResponseEntity<CategoryDTO> getCategory(@PathVariable("id") Long id) {
         if (id <= 0) {
             throw new BadRequestAlertException("Invalid ID", "Category", "idinvalid");
@@ -53,6 +56,7 @@ public class CategoryController {
     @PreAuthorize("hasAuthority('CATEGORY_UPDATE')")
     @Operation(summary = "Update category")
     @ApiMessage("Update category success")
+    @ApiResponse(responseCode = "200", description = "Update category success")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") Long id,
             @Valid @RequestBody CategoryDTO categoryDTO) {
         if (id <= 0) {
@@ -65,6 +69,7 @@ public class CategoryController {
     @PreAuthorize("hasAuthority('CATEGORY_DELETE')")
     @Operation(summary = "Delete category")
     @ApiMessage("Delete category success")
+    @ApiResponse(responseCode = "204", description = "Delete category success")
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long id) {
         if (id <= 0) {
             throw new BadRequestAlertException("Invalid ID", "Category", "idinvalid");
@@ -77,6 +82,7 @@ public class CategoryController {
     @PreAuthorize("hasAuthority('CATEGORY_READ')")
     @Operation(summary = "Get all categories with filter and pagination")
     @ApiMessage("Get all categories success")
+    @ApiResponse(responseCode = "200", description = "Get all categories success")
     public ResponseEntity<PagedResponse<CategoryDTO>> getAllCategories(
             @Filter Specification<Category> spec,
             Pageable pageable) {

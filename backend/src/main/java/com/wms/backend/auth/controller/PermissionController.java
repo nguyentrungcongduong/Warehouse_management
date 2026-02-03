@@ -18,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.Map;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import com.wms.backend.shared.util.anotation.ApiMessage;
 import com.wms.backend.shared.exception.BadRequestAlertException;
@@ -39,6 +39,8 @@ public class PermissionController {
     @PostMapping("/permissions")
     @ApiMessage("Permission created successfully")
     @PreAuthorize("hasAuthority('PERMISSION_CREATE')")
+    @Operation(summary = "Create permission", description = "Create a new permission")
+    @ApiResponse(responseCode = "201", description = "Permission created successfully")
     public ResponseEntity<Permission> createPermission(@Valid @RequestBody CreatePermissionRequest request) {
         log.info("REST request to create Permission: {}", request);
         Permission createdPermission = permissionService.createPermission(request);
@@ -49,6 +51,8 @@ public class PermissionController {
     @GetMapping("/permissions/{id}")
     @ApiMessage("Get permission successfully")
     @PreAuthorize("hasAuthority('PERMISSION_READ')")
+    @Operation(summary = "Get permission by id", description = "Retrieve permission details by its ID")
+    @ApiResponse(responseCode = "200", description = "Get permission successfully")
     public ResponseEntity<Permission> getPermissionById(@PathVariable("id") Long id) {
         log.info("REST request to get Permission by id: {}", id);
         if (id == null || id <= 0) {
@@ -60,6 +64,8 @@ public class PermissionController {
     @GetMapping("/permissions")
     @ApiMessage("Get all permissions successfully")
     @PreAuthorize("hasAuthority('PERMISSION_READ')")
+    @Operation(summary = "Get all permissions", description = "Retrieve all permissions with pagination and filtering")
+    @ApiResponse(responseCode = "200", description = "Get all permissions successfully")
     public ResponseEntity<PagedResponse<Permission>> getAllPermissions(
             @Filter Specification<Permission> spec,
             Pageable pageable) {
@@ -71,6 +77,8 @@ public class PermissionController {
     @PatchMapping("/permissions/{id}")
     @ApiMessage("Permission updated successfully")
     @PreAuthorize("hasAuthority('PERMISSION_UPDATE')")
+    @Operation(summary = "Update permission", description = "Update an existing permission")
+    @ApiResponse(responseCode = "200", description = "Permission updated successfully")
     public ResponseEntity<Permission> updatePartialPermission(@PathVariable("id") Long id,
             @Valid @RequestBody UpdatePermissionRequest permission) {
         log.info("REST request to update Permission partially, id: {}, body: {}", id, permission);
@@ -87,12 +95,14 @@ public class PermissionController {
     @DeleteMapping("/permissions/{id}")
     @ApiMessage("Xóa permission thành công")
     @PreAuthorize("hasAuthority('PERMISSION_DELETE')")
-    public ResponseEntity<Map<String, String>> deletePermissionById(@PathVariable("id") Long id) {
+    @Operation(summary = "Delete permission", description = "Delete a permission by its ID")
+    @ApiResponse(responseCode = "204", description = "Delete permission by id")
+    public ResponseEntity<Void> deletePermissionById(@PathVariable("id") Long id) {
         log.info("REST request to delete Permission by id: {}", id);
         if (id == null || id <= 0) {
             throw new BadRequestAlertException("Permission ID cannot be null or invalid", ENTITY_NAME, "invalidid");
         }
         permissionService.deleteById(id);
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.noContent().build();
     }
 }

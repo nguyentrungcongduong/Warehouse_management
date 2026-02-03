@@ -9,6 +9,7 @@ import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.BadRequestAlertException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ public class WarehouseController {
     @PreAuthorize("hasAuthority('WAREHOUSE_CREATE')")
     @Operation(summary = "Create a new warehouse")
     @ApiMessage("Create warehouse successfully")
+    @ApiResponse(responseCode = "201", description = "Create warehouse successfully")
     public ResponseEntity<WarehouseDTO> createWarehouse(@Valid @RequestBody WarehouseDTO warehouseDTO) {
         if (warehouseDTO.getId() != null) {
             throw new BadRequestAlertException("A new warehouse cannot already have an ID", "Warehouse", "idexists");
@@ -42,6 +44,7 @@ public class WarehouseController {
     @PreAuthorize("hasAuthority('WAREHOUSE_READ')")
     @Operation(summary = "Get warehouse by ID")
     @ApiMessage("Get warehouse success")
+    @ApiResponse(responseCode = "200", description = "Get warehouse success")
     public ResponseEntity<WarehouseDTO> getWarehouse(@PathVariable("id") Long id) {
         if (id <= 0) {
             throw new BadRequestAlertException("Invalid ID", "Warehouse", "idinvalid");
@@ -53,6 +56,7 @@ public class WarehouseController {
     @PreAuthorize("hasAuthority('WAREHOUSE_UPDATE')")
     @Operation(summary = "Update warehouse")
     @ApiMessage("Update warehouse success")
+    @ApiResponse(responseCode = "200", description = "Update warehouse success")
     public ResponseEntity<WarehouseDTO> updateWarehouse(@PathVariable("id") Long id,
             @Valid @RequestBody WarehouseDTO warehouseDTO) {
         if (id <= 0) {
@@ -65,6 +69,7 @@ public class WarehouseController {
     @PreAuthorize("hasAuthority('WAREHOUSE_DELETE')")
     @Operation(summary = "Delete warehouse")
     @ApiMessage("Delete warehouse success")
+    @ApiResponse(responseCode = "204", description = "Delete warehouse success")
     public ResponseEntity<Void> deleteWarehouse(@PathVariable("id") Long id) {
         if (id <= 0) {
             throw new BadRequestAlertException("Invalid ID", "Warehouse", "idinvalid");
@@ -77,6 +82,7 @@ public class WarehouseController {
     @PreAuthorize("hasAuthority('WAREHOUSE_READ')")
     @Operation(summary = "Get all warehouses with filter and pagination")
     @ApiMessage("Get all warehouses success")
+    @ApiResponse(responseCode = "200", description = "Get all warehouses success")
     public ResponseEntity<PagedResponse<WarehouseDTO>> getAllWarehouses(
             @Filter Specification<Warehouse> spec,
             Pageable pageable) {

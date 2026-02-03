@@ -9,6 +9,7 @@ import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.BadRequestAlertException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ public class ProductController {
     @PreAuthorize("hasAuthority('PRODUCT_CREATE')")
     @Operation(summary = "Create a new product")
     @ApiMessage("Create product successfully")
+    @ApiResponse(responseCode = "201", description = "Create product successfully")
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
         if (productDTO.getId() != null) {
             throw new BadRequestAlertException("A new product cannot already have an ID", "Product", "idexists");
@@ -42,6 +44,7 @@ public class ProductController {
     @PreAuthorize("hasAuthority('PRODUCT_READ')")
     @Operation(summary = "Get product by ID")
     @ApiMessage("Get product success")
+    @ApiResponse(responseCode = "200", description = "Get product success")
     public ResponseEntity<ProductDTO> getProduct(@PathVariable("id") Long id) {
         if (id <= 0) {
             throw new BadRequestAlertException("Invalid ID", "Product", "idinvalid");
@@ -53,6 +56,7 @@ public class ProductController {
     @PreAuthorize("hasAuthority('PRODUCT_UPDATE')")
     @Operation(summary = "Update product")
     @ApiMessage("Update product success")
+    @ApiResponse(responseCode = "200", description = "Update product success")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") Long id,
             @Valid @RequestBody ProductDTO productDTO) {
         if (id <= 0) {
@@ -65,6 +69,7 @@ public class ProductController {
     @PreAuthorize("hasAuthority('PRODUCT_DELETE')")
     @Operation(summary = "Delete product")
     @ApiMessage("Delete product success")
+    @ApiResponse(responseCode = "204", description = "Delete product success")
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
         if (id <= 0) {
             throw new BadRequestAlertException("Invalid ID", "Product", "idinvalid");
@@ -77,6 +82,7 @@ public class ProductController {
     @PreAuthorize("hasAuthority('PRODUCT_READ')")
     @Operation(summary = "Get all products with filter and pagination")
     @ApiMessage("Get all products success")
+    @ApiResponse(responseCode = "200", description = "Get all products success")
     public ResponseEntity<PagedResponse<ProductDTO>> getAllProducts(
             @Filter Specification<Product> spec,
             Pageable pageable) {

@@ -56,7 +56,7 @@ public class OpenAPIConfiguration {
                 .info(createApiInfo())
                 .servers(List.of(
                         createServer("http://localhost:8080", "Server URL in Development environment")))
-                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
-                .components(new Components().addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()));
+                .addSecurityItem(new SecurityRequirement().addList("Bearer_Authentication"))
+                .components(new Components().addSecuritySchemes("Bearer_Authentication", createAPIKeyScheme()));
     }
 }
