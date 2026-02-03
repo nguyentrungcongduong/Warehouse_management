@@ -22,7 +22,7 @@ public class LoginUserResponse {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public class InformationUser {
+    public static class InformationUser {
         private Long id;
         private String name;
         private String email;
@@ -33,7 +33,7 @@ public class LoginUserResponse {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public class UserGetAccount {
+    public static class UserGetAccount {
         private InformationUser user;
     }
 
@@ -41,7 +41,7 @@ public class LoginUserResponse {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public class UserInsideToken {
+    public static class UserInsideToken {
         private Long id;
         private String name;
         private String email;

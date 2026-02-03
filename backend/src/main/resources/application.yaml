@@ -1,5 +1,5 @@
 server:
-    port: ${POST}
+    port: ${PORT}
     
 spring:
     application:
