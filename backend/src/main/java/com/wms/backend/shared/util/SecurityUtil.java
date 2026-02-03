@@ -51,7 +51,7 @@ public class SecurityUtil {
     private String jwtKey;
 
     public String createAccessToken(String email, LoginUserResponse resLoginDTO) {
-        LoginUserResponse.UserInsideToken userToken = resLoginDTO.new UserInsideToken();
+        LoginUserResponse.UserInsideToken userToken = new LoginUserResponse.UserInsideToken();
         userToken.setId(resLoginDTO.getUser().getId());
         userToken.setEmail(resLoginDTO.getUser().getEmail());
         userToken.setName(resLoginDTO.getUser().getName());
@@ -87,7 +87,7 @@ public class SecurityUtil {
     }
 
     public String createFreshToken(String email, LoginUserResponse resLoginDTO) {
-        LoginUserResponse.UserInsideToken userToken = resLoginDTO.new UserInsideToken();
+        LoginUserResponse.UserInsideToken userToken = new LoginUserResponse.UserInsideToken();
         userToken.setId(resLoginDTO.getUser().getId());
         userToken.setEmail(resLoginDTO.getUser().getEmail());
         userToken.setName(resLoginDTO.getUser().getName());
@@ -165,7 +165,9 @@ public class SecurityUtil {
      */
     public static boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && getAuthorities(authentication).noneMatch("ROLE_USER_CREATE"::equals);
+        return authentication != null &&
+               authentication.isAuthenticated() &&
+               getAuthorities(authentication).noneMatch("ROLE_ANONYMOUS"::equals);
     }
 
     /**

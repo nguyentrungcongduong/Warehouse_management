@@ -145,7 +145,7 @@ public class AuthController {
         }
 
         LoginUserResponse res = new LoginUserResponse();
-        LoginUserResponse.InformationUser info = res.new InformationUser(
+        LoginUserResponse.InformationUser info = new LoginUserResponse.InformationUser(
                 user.get().getId(), user.get().getUsername(), user.get().getEmail(), user.get().getRoles());
         res.setUser(info);
 
@@ -157,7 +157,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
-                .maxAge(accessTokenExpiration)
+                .maxAge(refreshTokenExpiration)
                 .build();
     }
 
@@ -175,13 +175,13 @@ public class AuthController {
         if (currentUserDB.isEmpty()) {
             throw new EntityNotFoundException("User not found", email, "usernotfound");
         }
-        LoginUserResponse.InformationUser userLogin = new LoginUserResponse().new InformationUser(
+        LoginUserResponse.InformationUser userLogin = new LoginUserResponse.InformationUser(
                 currentUserDB.get().getId(),
                 currentUserDB.get().getUsername(),
                 currentUserDB.get().getEmail(),
                 currentUserDB.get().getRoles());
 
-        LoginUserResponse.UserGetAccount userGetAccount = new LoginUserResponse().new UserGetAccount(userLogin);
+        LoginUserResponse.UserGetAccount userGetAccount = new LoginUserResponse.UserGetAccount(userLogin);
 
         return ResponseEntity.ok(userGetAccount);
     }
