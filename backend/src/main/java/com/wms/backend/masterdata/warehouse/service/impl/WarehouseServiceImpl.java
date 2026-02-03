@@ -7,6 +7,7 @@ import com.wms.backend.masterdata.warehouse.entity.Warehouse;
 import com.wms.backend.masterdata.warehouse.mapper.WarehouseMapper;
 import com.wms.backend.masterdata.warehouse.repository.WarehouseRepository;
 import com.wms.backend.masterdata.warehouse.service.WarehouseService;
+import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.ConflictException;
 import com.wms.backend.shared.exception.EntityNotFoundException;
 import com.wms.backend.shared.util.SecurityUtil;
@@ -103,7 +104,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<WarehouseDTO> getAllWarehouses(Specification<Warehouse> spec, Pageable pageable) {
+    public PagedResponse<WarehouseDTO> getAllWarehouses(Specification<Warehouse> spec, Pageable pageable) {
         log.info("Fetching all warehouses with filter");
 
         if (!SecurityUtil.hasCurrentUserThisAuthority("ROLE_ADMIN")) {
@@ -116,7 +117,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             Long userWarehouseId = currentUser.getWarehouseId();
             if (userWarehouseId == null) {
                 // Return empty page if user has no warehouse assigned and is not admin
-                return Page.empty(pageable);
+                return PagedResponse.empty(pageable);
             }
 
             Specification<Warehouse> warehouseSpec = (root, query, cb) -> cb.equal(root.get("id"), userWarehouseId);
@@ -128,6 +129,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
 
         Page<Warehouse> page = warehouseRepository.findAll(spec, pageable);
-        return page.map(warehouseMapper::toDTO);
+        return new PagedResponse<>(page.map(warehouseMapper::toDTO));
     }
 }

@@ -5,12 +5,12 @@ import com.wms.backend.masterdata.warehouse.dto.WarehouseDTO;
 import com.wms.backend.masterdata.warehouse.entity.Warehouse;
 import com.wms.backend.masterdata.warehouse.service.WarehouseService;
 import com.wms.backend.shared.util.anotation.ApiMessage;
+import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.BadRequestAlertException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -77,7 +77,7 @@ public class WarehouseController {
     @PreAuthorize("hasAuthority('WAREHOUSE_READ')")
     @Operation(summary = "Get all warehouses with filter and pagination")
     @ApiMessage("Get all warehouses success")
-    public ResponseEntity<Page<WarehouseDTO>> getAllWarehouses(
+    public ResponseEntity<PagedResponse<WarehouseDTO>> getAllWarehouses(
             @Filter Specification<Warehouse> spec,
             Pageable pageable) {
         return ResponseEntity.ok(warehouseService.getAllWarehouses(spec, pageable));

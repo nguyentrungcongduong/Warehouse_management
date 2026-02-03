@@ -8,6 +8,7 @@ import com.wms.backend.masterdata.warehouse.mapper.WarehouseZoneMapper;
 import com.wms.backend.masterdata.warehouse.repository.WarehouseRepository;
 import com.wms.backend.masterdata.warehouse.repository.WarehouseZoneRepository;
 import com.wms.backend.masterdata.warehouse.service.WarehouseZoneService;
+import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.ConflictException;
 import com.wms.backend.shared.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -115,7 +116,7 @@ public class WarehouseZoneServiceImpl implements WarehouseZoneService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<WarehouseZoneDTO> getAllZones(Specification<WarehouseZone> spec, Pageable pageable) {
+    public PagedResponse<WarehouseZoneDTO> getAllZones(Specification<WarehouseZone> spec, Pageable pageable) {
         log.info("Fetching all zones with filter");
 
         if (!SecurityUtil.hasCurrentUserThisAuthority("ROLE_ADMIN")) {
@@ -127,7 +128,7 @@ public class WarehouseZoneServiceImpl implements WarehouseZoneService {
 
             Long userWarehouseId = currentUser.getWarehouseId();
             if (userWarehouseId == null) {
-                return Page.empty(pageable);
+                return PagedResponse.empty(pageable);
             }
 
             Specification<WarehouseZone> warehouseSpec = (root, query, cb) -> cb.equal(root.get("warehouse").get("id"),
@@ -140,6 +141,6 @@ public class WarehouseZoneServiceImpl implements WarehouseZoneService {
         }
 
         Page<WarehouseZone> page = zoneRepository.findAll(spec, pageable);
-        return page.map(zoneMapper::toDTO);
+        return new PagedResponse<>(page.map(zoneMapper::toDTO));
     }
 }

@@ -25,4 +25,8 @@ public class PagedResponse<T> {
         this.totalPages = page.getTotalPages();
         this.last = page.isLast();
     }
+    
+    public static <T> PagedResponse<T> empty(org.springframework.data.domain.Pageable pageable) {
+        return new PagedResponse<>(Page.empty(pageable));
+    }
 }

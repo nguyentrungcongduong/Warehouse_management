@@ -63,14 +63,6 @@ public class SecurityUtil {
                 ? resLoginDTO.getUser().getRoles().stream().map(Role::getName).collect(Collectors.toList())
                 : new ArrayList<>();
 
-        // List<String> permissions = resLoginDTO.getUser().getRoles() != null
-        // ? resLoginDTO.getUser().getRoles().stream()
-        // .flatMap(role -> role.getPermissions().stream())
-        // .map(Permission::getCode)
-        // .distinct()
-        // .collect(Collectors.toList())
-        // : new ArrayList<>();
-
         // @formatter:off
         JwtClaimsSet claims = JwtClaimsSet.builder()
             .issuedAt(now)
@@ -95,12 +87,17 @@ public class SecurityUtil {
         Instant now = Instant.now();
         Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
 
+        List<String> roles = resLoginDTO.getUser().getRoles() != null
+                ? resLoginDTO.getUser().getRoles().stream().map(Role::getName).collect(Collectors.toList())
+                : new ArrayList<>();
+                
         // @formatter:off
         JwtClaimsSet claims = JwtClaimsSet.builder()
             .issuedAt(now)
             .expiresAt(validity)
             .subject(email)
             .claim("user", userToken)
+            .claim("roles", roles)
             .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();

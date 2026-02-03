@@ -9,6 +9,7 @@ import com.wms.backend.masterdata.warehouse.repository.StorageLocationRepository
 import com.wms.backend.masterdata.warehouse.repository.WarehouseRepository;
 import com.wms.backend.masterdata.warehouse.repository.WarehouseZoneRepository;
 import com.wms.backend.masterdata.warehouse.service.StorageLocationService;
+import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.ConflictException;
 import com.wms.backend.shared.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -142,7 +143,7 @@ public class StorageLocationServiceImpl implements StorageLocationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<StorageLocationDTO> getAllLocations(Specification<StorageLocation> spec, Pageable pageable) {
+    public PagedResponse<StorageLocationDTO> getAllLocations(Specification<StorageLocation> spec, Pageable pageable) {
         log.info("Fetching all locations with filter");
 
         if (!SecurityUtil.hasCurrentUserThisAuthority("ROLE_ADMIN")) {
@@ -154,7 +155,7 @@ public class StorageLocationServiceImpl implements StorageLocationService {
 
             Long userWarehouseId = currentUser.getWarehouseId();
             if (userWarehouseId == null) {
-                return Page.empty(pageable);
+                return PagedResponse.empty(pageable);
             }
 
             Specification<StorageLocation> warehouseSpec = (root, query, cb) -> cb
@@ -167,6 +168,6 @@ public class StorageLocationServiceImpl implements StorageLocationService {
         }
 
         Page<StorageLocation> page = locationRepository.findAll(spec, pageable);
-        return page.map(locationMapper::toDTO);
+        return new PagedResponse<>(page.map(locationMapper::toDTO));
     }
 }

@@ -5,12 +5,12 @@ import com.wms.backend.masterdata.warehouse.dto.StorageLocationDTO;
 import com.wms.backend.masterdata.warehouse.entity.StorageLocation;
 import com.wms.backend.masterdata.warehouse.service.StorageLocationService;
 import com.wms.backend.shared.util.anotation.ApiMessage;
+import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.BadRequestAlertException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -78,7 +78,7 @@ public class StorageLocationController {
     @PreAuthorize("hasAuthority('LOCATION_READ')")
     @Operation(summary = "Get all locations with filter and pagination")
     @ApiMessage("Get all locations success")
-    public ResponseEntity<Page<StorageLocationDTO>> getAllLocations(
+    public ResponseEntity<PagedResponse<StorageLocationDTO>> getAllLocations(
             @Filter Specification<StorageLocation> spec,
             Pageable pageable) {
         return ResponseEntity.ok(locationService.getAllLocations(spec, pageable));

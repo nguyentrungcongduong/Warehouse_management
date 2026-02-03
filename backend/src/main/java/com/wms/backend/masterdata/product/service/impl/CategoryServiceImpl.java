@@ -6,6 +6,7 @@ import com.wms.backend.masterdata.product.entity.Category;
 import com.wms.backend.masterdata.product.mapper.CategoryMapper;
 import com.wms.backend.masterdata.product.repository.CategoryRepository;
 import com.wms.backend.masterdata.product.service.CategoryService;
+import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,9 +84,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CategoryDTO> getAllCategories(Specification<Category> spec, Pageable pageable) {
+    public PagedResponse<CategoryDTO> getAllCategories(Specification<Category> spec, Pageable pageable) {
         log.info("Fetching all categories with filter");
         Page<Category> page = categoryRepository.findAll(spec, pageable);
-        return page.map(categoryMapper::toDTO);
+        return new PagedResponse<>(page.map(categoryMapper::toDTO));
     }
 }

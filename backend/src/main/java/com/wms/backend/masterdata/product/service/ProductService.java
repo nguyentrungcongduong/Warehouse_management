@@ -2,7 +2,8 @@ package com.wms.backend.masterdata.product.service;
 
 import com.wms.backend.masterdata.product.dto.ProductDTO;
 import com.wms.backend.masterdata.product.entity.Product;
-import org.springframework.data.domain.Page;
+import com.wms.backend.shared.dto.response.PagedResponse;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -15,5 +16,5 @@ public interface ProductService {
 
     void deleteProduct(Long id);
 
-    Page<ProductDTO> getAllProducts(Specification<Product> spec, Pageable pageable);
+    PagedResponse<ProductDTO> getAllProducts(Specification<Product> spec, Pageable pageable);
 }

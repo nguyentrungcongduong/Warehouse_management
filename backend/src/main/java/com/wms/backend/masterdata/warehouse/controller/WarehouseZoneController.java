@@ -5,12 +5,12 @@ import com.wms.backend.masterdata.warehouse.dto.WarehouseZoneDTO;
 import com.wms.backend.masterdata.warehouse.entity.WarehouseZone;
 import com.wms.backend.masterdata.warehouse.service.WarehouseZoneService;
 import com.wms.backend.shared.util.anotation.ApiMessage;
+import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.BadRequestAlertException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -77,7 +77,7 @@ public class WarehouseZoneController {
     @PreAuthorize("hasAuthority('ZONE_READ')")
     @Operation(summary = "Get all zones with filter and pagination")
     @ApiMessage("Get all zones success")
-    public ResponseEntity<Page<WarehouseZoneDTO>> getAllZones(
+    public ResponseEntity<PagedResponse<WarehouseZoneDTO>> getAllZones(
             @Filter Specification<WarehouseZone> spec,
             Pageable pageable) {
         return ResponseEntity.ok(zoneService.getAllZones(spec, pageable));

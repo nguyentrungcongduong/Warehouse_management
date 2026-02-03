@@ -2,7 +2,8 @@ package com.wms.backend.masterdata.product.service;
 
 import com.wms.backend.masterdata.product.dto.CategoryDTO;
 import com.wms.backend.masterdata.product.entity.Category;
-import org.springframework.data.domain.Page;
+import com.wms.backend.shared.dto.response.PagedResponse;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -15,5 +16,5 @@ public interface CategoryService {
 
     void deleteCategory(Long id);
 
-    Page<CategoryDTO> getAllCategories(Specification<Category> spec, Pageable pageable);
+    PagedResponse<CategoryDTO> getAllCategories(Specification<Category> spec, Pageable pageable);
 }

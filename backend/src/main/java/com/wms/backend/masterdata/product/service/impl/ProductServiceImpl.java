@@ -7,6 +7,7 @@ import com.wms.backend.masterdata.product.mapper.ProductMapper;
 import com.wms.backend.masterdata.product.repository.CategoryRepository;
 import com.wms.backend.masterdata.product.repository.ProductRepository;
 import com.wms.backend.masterdata.product.service.ProductService;
+import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.ConflictException;
 import com.wms.backend.shared.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -115,9 +116,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductDTO> getAllProducts(Specification<Product> spec, Pageable pageable) {
+    public PagedResponse<ProductDTO> getAllProducts(Specification<Product> spec, Pageable pageable) {
         log.info("Fetching all products with filter");
         Page<Product> page = productRepository.findAll(spec, pageable);
-        return page.map(productMapper::toDTO);
+        return new PagedResponse<>(page.map(productMapper::toDTO));
     }
 }

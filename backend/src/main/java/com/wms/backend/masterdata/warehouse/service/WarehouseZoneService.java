@@ -2,7 +2,8 @@ package com.wms.backend.masterdata.warehouse.service;
 
 import com.wms.backend.masterdata.warehouse.dto.WarehouseZoneDTO;
 import com.wms.backend.masterdata.warehouse.entity.WarehouseZone;
-import org.springframework.data.domain.Page;
+import com.wms.backend.shared.dto.response.PagedResponse;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -15,5 +16,5 @@ public interface WarehouseZoneService {
 
     void deleteZone(Long id);
 
-    Page<WarehouseZoneDTO> getAllZones(Specification<WarehouseZone> spec, Pageable pageable);
+    PagedResponse<WarehouseZoneDTO> getAllZones(Specification<WarehouseZone> spec, Pageable pageable);
 }
