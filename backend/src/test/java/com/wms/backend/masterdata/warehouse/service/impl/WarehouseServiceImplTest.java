@@ -115,7 +115,7 @@ class WarehouseServiceImplTest {
 
         User manager = new User();
         manager.setWarehouseId(id);
-        when(userRepository.findByEmail("manager")).thenReturn(Optional.of(manager));
+        when(userRepository.findOneByEmail("manager")).thenReturn(Optional.of(manager));
         when(warehouseMapper.toDTO(warehouse)).thenReturn(dto);
 
         WarehouseDTO result = warehouseService.getWarehouseById(id);
@@ -136,7 +136,7 @@ class WarehouseServiceImplTest {
 
         User manager = new User();
         manager.setWarehouseId(2L); // Different ID
-        when(userRepository.findByEmail("manager")).thenReturn(Optional.of(manager));
+        when(userRepository.findOneByEmail("manager")).thenReturn(Optional.of(manager));
 
         assertThrows(EntityNotFoundException.class, () -> warehouseService.getWarehouseById(id));
     }

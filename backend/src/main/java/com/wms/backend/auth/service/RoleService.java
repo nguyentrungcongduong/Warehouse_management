@@ -1,8 +1,16 @@
 package com.wms.backend.auth.service;
 
+import com.wms.backend.auth.dto.request.CreateRoleRequest;
+import com.wms.backend.auth.dto.request.UpdateRoleRequest;
+import com.wms.backend.auth.dto.response.RoleResponse;
 import com.wms.backend.auth.entity.Role;
+import com.wms.backend.shared.dto.response.PagedResponse;
+
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 public interface RoleService {
     Optional<Role> findByName(String name);
@@ -13,21 +21,19 @@ public interface RoleService {
 
     void delete(Long id);
 
-    com.wms.backend.auth.entity.Role createRole(com.wms.backend.auth.dto.request.CreateRoleRequest request);
+    Role createRole(CreateRoleRequest request);
 
-    com.wms.backend.auth.entity.Role addPermissionForRole(com.wms.backend.auth.dto.request.UpdateRoleRequest request);
+    Role addPermissionForRole(UpdateRoleRequest request);
 
-    com.wms.backend.auth.entity.Role findById(Long id);
+    Role findById(Long id);
 
-    com.wms.backend.shared.dto.response.PagedResponse<com.wms.backend.auth.entity.Role> findAll(
-            org.springframework.data.jpa.domain.Specification<Role> spec,
-            org.springframework.data.domain.Pageable pageable);
+    PagedResponse<Role> findAll(Specification<Role> spec, Pageable pageable);
 
-    com.wms.backend.auth.entity.Role updatePartialRole(com.wms.backend.auth.dto.request.UpdateRoleRequest request);
+    Role updatePartialRole(UpdateRoleRequest request);
 
-    com.wms.backend.auth.dto.response.RoleResponse convertToResRoleDTO(com.wms.backend.auth.entity.Role role);
+    RoleResponse convertToResRoleDTO(Role role);
 
     void deleteById(Long id);
 
-    void deletePermissionFromRole(com.wms.backend.auth.dto.request.UpdateRoleRequest request);
+    void deletePermissionFromRole(UpdateRoleRequest request);
 }

@@ -2,6 +2,7 @@ package com.wms.backend.auth.controller;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -18,11 +19,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wms.backend.auth.dto.request.ChangePasswordRequest;
+import com.wms.backend.auth.dto.request.KeyAndPasswordRequest;
 import com.wms.backend.auth.dto.request.LoginUserRequest;
 import com.wms.backend.auth.dto.response.LoginUserResponse;
 import com.wms.backend.auth.entity.User;
 import com.wms.backend.auth.service.UserService;
 import com.wms.backend.shared.exception.EntityNotFoundException;
+import com.wms.backend.shared.exception.InvalidPasswordException;
+import com.wms.backend.shared.service.MailService;
 import com.wms.backend.shared.util.SecurityUtil;
 import com.wms.backend.shared.util.anotation.ApiMessage;
 
@@ -46,11 +51,16 @@ public class AuthController {
 
     private final UserService userService;
 
+    private final MailService mailService;
+
     @Value("${security.authentication.jwt.access-token-validity-in-seconds}")
     private long accessTokenExpiration;
 
     @Value("${security.authentication.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
+
+    private final int PASSWORD_MIN_LENGTH = 6;
+    private final int PASSWORD_MAX_LENGTH = 30;
 
     @PostMapping("/auth/login")
     @ApiMessage("Login successful")
@@ -219,6 +229,54 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString())
                 .build();
 
+    }
+
+    @PostMapping("/auth/reset-password/init")
+    @ApiMessage("Request password reset successful")
+    @Operation(summary = "Request password reset", description = "Request password reset")
+    public void requestPasswordReset(@RequestBody String mail) {
+        Optional<User> user = userService.requestPasswordReset(mail);
+        if (user.isPresent()) {
+            mailService.sendPasswordResetMail(user.orElseThrow());
+        } else {
+            // Pretend the request has been successful to prevent checking which emails
+            // really exist
+            // but log that an invalid attempt has been made
+            log.warn("Password reset requested for non existing mail");
+        }
+    }
+
+    @PostMapping("/auth/reset-password/finish")
+    @ApiMessage("Reset passsword password successful")
+    @Operation(summary = "Reset password", description = "Reset password")
+    public void finishPasswordReset(@RequestBody KeyAndPasswordRequest keyAndPassword) {
+        if (isPasswordLengthInvalid(keyAndPassword.getNewPassword())) {
+            throw new InvalidPasswordException();
+        }
+        Optional<User> user = userService.completePasswordReset(keyAndPassword.getNewPassword(),
+                keyAndPassword.getKey());
+
+        if (!user.isPresent()) {
+            throw new EntityNotFoundException("No user was found for this reset key", "User", "usernotfound");
+        }
+    }
+
+    @PostMapping("/auth/change-password")
+    @ApiMessage("Change password successful")
+    @Operation(summary = "Change password", description = "Change password")
+    @ApiResponse(responseCode = "200", description = "Change password successful")
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request) {
+        if (isPasswordLengthInvalid(request.getNewPassword())) {
+            throw new InvalidPasswordException();
+        }
+        this.userService.changePassword(request.getCurrentPassword(), request.getNewPassword());
+        return ResponseEntity.ok().build();
+    }
+
+    private boolean isPasswordLengthInvalid(String password) {
+        return (StringUtils.isEmpty(password) ||
+                password.length() < PASSWORD_MIN_LENGTH ||
+                password.length() > PASSWORD_MAX_LENGTH);
     }
 
 }

@@ -51,7 +51,7 @@ public class UserRepositoryTest {
     @Test
     public void givenUser_whenSaved_thenCanBeFoundByEmail() {
         userRepository.save(user);
-        Optional<User> foundUser = userRepository.findByEmail("test@example.com");
+        Optional<User> foundUser = userRepository.findOneByEmail("test@example.com");
         assertThat(foundUser).isPresent();
         assertThat(foundUser.get().getUsername()).isEqualTo("testuser");
     }

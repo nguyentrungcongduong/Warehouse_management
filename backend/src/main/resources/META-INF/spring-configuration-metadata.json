@@ -1,6 +1,10 @@
 {
   "properties": [
     {
+      "name": "spring.application.client-app-url",
+      "type": "java.lang.String"
+    },
+    {
       "name": "security.authentication.jwt.base64-secret",
       "type": "java.lang.String"
     },
@@ -11,6 +15,10 @@
     {
       "name": "security.authentication.jwt.refresh-token-validity-in-seconds",
       "type": "java.lang.Integer"
+    },
+    {
+      "name": "quangkhongbiet",
+      "type": "java.lang.String"
     }
   ]
 }

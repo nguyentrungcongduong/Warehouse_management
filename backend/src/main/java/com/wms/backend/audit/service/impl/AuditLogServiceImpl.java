@@ -34,7 +34,7 @@ public class AuditLogServiceImpl implements AuditLogService {
             Long userId = null;
             Optional<String> currentUserLogin = SecurityUtil.getCurrentUserLogin();
             if (currentUserLogin.isPresent()) {
-                Optional<User> user = userRepository.findByEmail(currentUserLogin.get());
+                Optional<User> user = userRepository.findOneByEmail(currentUserLogin.get());
                 if (user.isPresent()) {
                     userId = user.get().getId();
                 }

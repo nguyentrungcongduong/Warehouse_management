@@ -28,7 +28,13 @@ public class SecurityConfiguration {
                                 .cors(Customizer.withDefaults())
                                 .csrf(c -> c.disable())
                                 .authorizeHttpRequests(authz -> authz
-                                                .requestMatchers("/api/v1/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
+                                                .requestMatchers(
+                                                        "/api/v1/auth/login", 
+                                                        "/api/v1/auth/logout", 
+                                                        "/api/v1/auth/refresh", 
+                                                        "/api/v1/auth/reset-password/**", 
+                                                        "/swagger-ui/**", 
+                                                        "/v3/api-docs/**")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .oauth2ResourceServer((oauth2) -> oauth2

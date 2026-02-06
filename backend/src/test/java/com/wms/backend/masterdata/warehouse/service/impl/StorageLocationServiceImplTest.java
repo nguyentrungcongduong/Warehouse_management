@@ -117,7 +117,7 @@ class StorageLocationServiceImplTest {
 
         User manager = new User();
         manager.setWarehouseId(1L);
-        when(userRepository.findByEmail("manager")).thenReturn(Optional.of(manager));
+        when(userRepository.findOneByEmail("manager")).thenReturn(Optional.of(manager));
         StorageLocationDTO dto = new StorageLocationDTO();
         when(locationMapper.toDTO(location)).thenReturn(dto);
 

@@ -67,7 +67,7 @@ public class WarehouseZoneServiceImpl implements WarehouseZoneService {
             String currentUserLogin = SecurityUtil.getCurrentUserLogin()
                     .orElseThrow(() -> new EntityNotFoundException("User not found", "User", "notfound"));
 
-            User currentUser = userRepository.findByEmail(currentUserLogin)
+            User currentUser = userRepository.findOneByEmail(currentUserLogin)
                     .orElseThrow(() -> new EntityNotFoundException("User not found", "User", "notfound"));
 
             if (currentUser.getWarehouseId() == null
@@ -123,7 +123,7 @@ public class WarehouseZoneServiceImpl implements WarehouseZoneService {
             String currentUserLogin = SecurityUtil.getCurrentUserLogin()
                     .orElseThrow(() -> new EntityNotFoundException("User not found", "User", "notfound"));
 
-            User currentUser = userRepository.findByEmail(currentUserLogin)
+            User currentUser = userRepository.findOneByEmail(currentUserLogin)
                     .orElseThrow(() -> new EntityNotFoundException("User not found", "User", "notfound"));
 
             Long userWarehouseId = currentUser.getWarehouseId();

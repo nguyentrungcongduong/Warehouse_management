@@ -120,7 +120,7 @@ class WarehouseZoneServiceImplTest {
 
         User manager = new User();
         manager.setWarehouseId(1L);
-        when(userRepository.findByEmail("manager")).thenReturn(Optional.of(manager));
+        when(userRepository.findOneByEmail("manager")).thenReturn(Optional.of(manager));
         WarehouseZoneDTO zoneDTO = new WarehouseZoneDTO();
         when(zoneMapper.toDTO(zone)).thenReturn(zoneDTO);
 

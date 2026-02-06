@@ -11,11 +11,15 @@ import com.wms.backend.auth.repository.UserRepository;
 import com.wms.backend.auth.service.UserService;
 import com.wms.backend.audit.service.AuditLogService;
 import com.wms.backend.shared.exception.EntityNotFoundException;
+import com.wms.backend.shared.exception.InvalidPasswordException;
+import com.wms.backend.shared.util.SecurityUtil;
 import com.wms.backend.shared.dto.response.PagedResponse;
 import com.wms.backend.shared.exception.EmailAlreadyUsedException;
+// import com.wms.backend.shared.util.RandomUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tech.jhipster.security.RandomUtil;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -26,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Slf4j
@@ -40,8 +45,11 @@ public class UserServiceImpl implements UserService {
     private final static String ENTITY_NAME = "User";
 
     private final UserRepository userRepository;
+
     private final AuditLogService auditLogService;
+
     private final PasswordEncoder passwordEncoder;
+
     private final UserMapper userMapper;
 
     @Override
@@ -55,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Optional<User> findByEmail(String email) {
         log.debug("Finding user by email: {}", email);
-        return userRepository.findByEmail(email);
+        return userRepository.findOneByEmail(email);
     }
 
     @Override
@@ -95,7 +103,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserToken(String email, String token) {
         log.debug("update User token with email: {}, token: {}", email, token);
-        User user = this.userRepository.findByEmail(email)
+        User user = this.userRepository.findOneByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found", ENTITY_NAME, "usernotfound"));
 
         user.setRefreshToken(token);
@@ -179,5 +187,47 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         log.info("Request to delete user by id: {}", id);
         this.delete(id);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(String currentPassword, String newPassword) {
+        SecurityUtil.getCurrentUserLogin()
+                .flatMap(userRepository::findOneByEmail)
+                .ifPresent(user -> {
+                    String currentEncryptedPassword = user.getPassword();
+                    if (!passwordEncoder.matches(currentPassword, currentEncryptedPassword)) {
+                        throw new InvalidPasswordException();
+                    }
+                    String encryptedPassword = passwordEncoder.encode(newPassword);
+                    user.setPassword(encryptedPassword);
+                    log.debug("Changed password for User: {}", user);
+                });
+    }
+
+    @Override
+    public Optional<User> requestPasswordReset(String mail) {
+        return userRepository
+                .findOneByEmail(mail)
+                .filter(User::getActive)
+                .map(user -> {
+                    user.setResetKey(RandomUtil.generateResetKey());
+                    user.setUpdatedAt(Instant.now());
+                    return user;
+                });
+    }
+
+    @Override
+    public Optional<User> completePasswordReset(String newPassword, String key) {
+        log.debug("Reset user password for reset key {}", key);
+        return userRepository
+                .findOneByResetKey(key)
+                .filter(user -> user.getUpdatedAt().isAfter(Instant.now().minus(1, ChronoUnit.DAYS)))
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    user.setResetKey(null);
+                    user.setUpdatedAt(null);
+                    return user;
+                });
     }
 }

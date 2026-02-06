@@ -65,8 +65,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void givenExistingEmail_whenFindByEmail_thenReturnsUser() {
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+    public void givenExistingEmail_whenfindOneByEmail_thenReturnsUser() {
+        when(userRepository.findOneByEmail("test@example.com")).thenReturn(Optional.of(user));
 
         Optional<User> foundUser = userService.findByEmail("test@example.com");
 
@@ -113,7 +113,7 @@ public class UserServiceTest {
 
     @Test
     public void givenUserAndToken_whenUpdateUserToken_thenTokenUpdated() {
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(userRepository.findOneByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         userService.updateUserToken("test@example.com", "newToken");
@@ -124,7 +124,7 @@ public class UserServiceTest {
 
     @Test
     public void givenUserAndNullToken_whenUpdateUserToken_thenTokenCleared() {
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(userRepository.findOneByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         userService.updateUserToken("test@example.com", null);

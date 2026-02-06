@@ -442,38 +442,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 roleRepository.save(packerRole);
                 log.info("Created role: PACKER");
 
-                // ==================== VIEWER ROLE ====================
-                Role viewerRole = new Role();
-                viewerRole.setName("VIEWER");
-                viewerRole.setDescription("Chỉ xem - Không thao tác");
-                viewerRole.setActive(true);
-                viewerRole.setPermissions(new HashSet<>(permissionRepository.findByCodeIn(List.of(
-                                // Inventory
-                                "STOCK_COUNT_READ", "SCAN_LOG_READ", "ADJUSTMENT_READ", "DISCREPANCY_READ",
-
-                                // FEFO
-                                "BATCH_READ", "PICKING_READ", "EXPIRY_ALERT_READ", "BATCH_REPORT_READ",
-
-                                // Cross-dock
-                                "INBOUND_READ", "OUTBOUND_READ", "CROSSDOCK_MAPPING_READ", "CROSSDOCK_REPORT_READ",
-
-                                // Packaging
-                                "MATERIAL_READ", "TEMPLATE_READ", "PACKAGING_HISTORY_READ", "PACKAGING_REPORT_READ",
-
-                                // Warehouse Core
-                                "WAREHOUSE_READ", "ZONE_READ", "LOCATION_READ",
-                                "PRODUCT_READ", "CATEGORY_READ", "SUPPLIER_READ", "CUSTOMER_READ",
-
-                                // Reports
-                                "REPORT_READ", "REPORT_EXPORT",
-
-                                // System
-                                "AUDIT_LOG_READ"))));
-                viewerRole.setCreatedAt(Instant.now());
-                roleRepository.save(viewerRole);
-                log.info("Created role: VIEWER");
-
-                log.info("Created total {} roles", 6);
+                log.info("Created total {} roles", 5);
         }
 
         /**
